@@ -166,6 +166,7 @@ cython_debug/
 
 # Ignore local trained model
 model.joblib
+*.joblib
 
 # Ignore steps.txt file
 steps.txt

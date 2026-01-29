@@ -36,14 +36,40 @@ def test_preprocess_data():
 # ----------------- Test Train model ----------------- #
 # Test the train_model function to ensure it correctly trains the model
 def test_train_model():
-    # Generate sample data for testing
+    # Generate sample data for testing using Breast Cancer dataset features
     X = pd.DataFrame({
-        'sepal length (cm)': [5.1, 4.9, 4.7, 4.6, 5.0],
-        'sepal width (cm)': [3.5, 3.0, 3.2, 3.1, 3.6],
-        'petal length (cm)': [1.4, 1.4, 1.3, 1.5, 1.4],
-        'petal width (cm)': [0.2, 0.2, 0.2, 0.2, 0.2],
+        'mean radius': [14.5, 18.2, 16.8, 12.3, 19.5],
+        'mean texture': [18.5, 25.3, 20.1, 15.8, 28.5],
+        'mean perimeter': [95.5, 115.8, 108.2, 82.3, 125.6],
+        'mean area': [680.0, 950.0, 850.0, 520.0, 1100.0],
+        'mean smoothness': [0.095, 0.105, 0.110, 0.080, 0.120],
+        'mean compactness': [0.12, 0.18, 0.15, 0.08, 0.22],
+        'mean concavity': [0.08, 0.15, 0.12, 0.03, 0.18],
+        'mean concave points': [0.05, 0.10, 0.08, 0.02, 0.12],
+        'mean symmetry': [0.18, 0.22, 0.20, 0.15, 0.25],
+        'mean fractal dimension': [0.062, 0.068, 0.065, 0.055, 0.072],
+        'radius error': [0.4, 0.7, 0.5, 0.3, 0.9],
+        'texture error': [1.2, 2.1, 1.5, 0.8, 2.8],
+        'perimeter error': [2.5, 4.2, 3.1, 1.8, 5.5],
+        'area error': [25.0, 55.0, 35.0, 15.0, 75.0],
+        'smoothness error': [0.008, 0.012, 0.010, 0.005, 0.015],
+        'compactness error': [0.012, 0.025, 0.018, 0.008, 0.032],
+        'concavity error': [0.015, 0.045, 0.030, 0.010, 0.055],
+        'concave points error': [0.008, 0.018, 0.012, 0.005, 0.020],
+        'symmetry error': [0.015, 0.035, 0.025, 0.010, 0.040],
+        'fractal dimension error': [0.003, 0.008, 0.005, 0.002, 0.010],
+        'worst radius': [16.5, 22.3, 20.1, 14.2, 25.8],
+        'worst texture': [22.5, 35.2, 28.5, 18.3, 40.5],
+        'worst perimeter': [110.5, 155.2, 135.8, 95.3, 175.5],
+        'worst area': [820.0, 1350.0, 1100.0, 680.0, 1600.0],
+        'worst smoothness': [0.13, 0.16, 0.15, 0.10, 0.18],
+        'worst compactness': [0.25, 0.55, 0.40, 0.15, 0.65],
+        'worst concavity': [0.20, 0.60, 0.40, 0.10, 0.75],
+        'worst concave points': [0.10, 0.20, 0.15, 0.05, 0.25],
+        'worst symmetry': [0.30, 0.50, 0.40, 0.20, 0.55],
+        'worst fractal dimension': [0.10, 0.16, 0.13, 0.08, 0.18],
     })
-    y = pd.Series([0, 0, 0, 0, 1])
+    y = pd.Series([0, 0, 0, 1, 1])
     
     # Train the model using the sample data
     model = train_model(X, y)

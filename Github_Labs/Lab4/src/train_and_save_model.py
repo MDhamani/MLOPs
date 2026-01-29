@@ -16,12 +16,12 @@ from xgboost import XGBClassifier
 import joblib
 from datetime import datetime
 
-# Function to download the Iris dataset from the sklearn library
+# Function to download the Breast Cancer dataset from the sklearn library
 def download_data():
-    from sklearn.datasets import load_iris
-    iris = load_iris()  # Load the Iris dataset
-    features = pd.DataFrame(iris.data, columns=iris.feature_names)  # Convert the iris data to a DataFrame
-    target = pd.Series(iris.target)  # Convert the iris target to a Series
+    from sklearn.datasets import load_breast_cancer
+    breast_cancer = load_breast_cancer()  # Load the Breast Cancer dataset
+    features = pd.DataFrame(breast_cancer.data, columns=breast_cancer.feature_names)  # Convert the breast cancer data to a DataFrame
+    target = pd.Series(breast_cancer.target)  # Convert the breast cancer target to a Series
     return features, target
 
 # Function to preprocess the downloaded data by splitting it into training and testing sets
@@ -31,7 +31,7 @@ def preprocess_data(X, y):
 
 # Function to train a XGBoost model using the preprocessed training data
 def train_model(X_train, y_train):
-    model = XGBClassifier(n_estimators=100, random_state=42, verbosity=0)  # Initialize XGBoost with specific parameters
+    model = XGBClassifier(n_estimators=100, random_state=42, verbosity=0, base_score=0.5, use_label_encoder=False, eval_metric='logloss')  # Initialize XGBoost with specific parameters
     model.fit(X_train, y_train)  # Fit the model to the training data
     return model
 
