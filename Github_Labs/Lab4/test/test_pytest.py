@@ -2,6 +2,8 @@ import pytest
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from unittest.mock import patch, MagicMock
+
+from xgboost import XGBClassifier
 from src.train_and_save_model import download_data, preprocess_data, train_model
 from src.train_and_save_model import get_model_version, update_model_version
 from src.train_and_save_model import ensure_folder_exists, save_model_to_gcs
@@ -41,13 +43,13 @@ def test_train_model():
         'petal length (cm)': [1.4, 1.4, 1.3, 1.5, 1.4],
         'petal width (cm)': [0.2, 0.2, 0.2, 0.2, 0.2],
     })
-    y = pd.Series([0, 0, 0, 0, 0])
+    y = pd.Series([0, 0, 0, 0, 1])
     
     # Train the model using the sample data
     model = train_model(X, y)
     
     # Assertions to verify the model is trained correctly
-    assert isinstance(model, RandomForestClassifier)  # Check if the returned model is of the correct type
+    assert isinstance(model, XGBClassifier)  # Check if the returned model is of the correct type
     assert hasattr(model, 'predict')                  # Ensure the model has a predict method
 
 # ----------------- Test Model versioning ----------------- #
