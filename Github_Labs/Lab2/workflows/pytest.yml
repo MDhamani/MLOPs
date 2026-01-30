@@ -1,0 +1,41 @@
+name: Pytest Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.9
+
+    - name: Install uv
+      run: pip install uv
+
+    - name: Install dependencies using uv
+      run: uv pip install -r Github_Labs/Lab2/requirements.txt
+
+    - name: Install pytest
+      run: uv pip install pytest
+
+    - name: Run pytest
+      run: |
+        cd Github_Labs/Lab2
+        pytest test/ -v --tb=short
+
+    - name: Generate test report
+      if: always()
+      run: |
+        echo "Test run completed at $(date)" > test_report.txt
