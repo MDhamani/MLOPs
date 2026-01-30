@@ -40,20 +40,21 @@ jobs:
 
     - name: Retrain Model
       run: |
-        uv run python Github_Labs/Lab2/src/train_model.py --timestamp "$timestamp"
+        cd Github_Labs/Lab2
+        uv run python src/train_model.py --timestamp "$timestamp"
 
     - name: Evaluate Model and Log Metrics
       run: |
-        uv run python Github_Labs/Lab2/src/evaluate_model.py --timestamp "$timestamp"
-        metrics_filename="${timestamp}_metrics.json"
-        mkdir -p Github_Labs/Lab2/metrics
-        mv "$metrics_filename" "Github_Labs/Lab2/metrics/$metrics_filename"
+        cd Github_Labs/Lab2
+        uv run python src/evaluate_model.py --timestamp "$timestamp"
 
     - name: Store and Version the New Model
       run: |
         model_filename="model_${timestamp}_xgb_model.joblib"
         mkdir -p Github_Labs/Lab2/models
-        mv "$model_filename" "Github_Labs/Lab2/models/$model_filename"
+        if [ -f "$model_filename" ]; then
+          mv "$model_filename" "Github_Labs/Lab2/models/$model_filename"
+        fi
 
     - name: Commit and Push Changes
       run: |
