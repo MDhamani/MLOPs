@@ -13,21 +13,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.9
-
     - name: Install uv
-      run: pip install uv
+      uses: astral-sh/setup-uv@v1
+      with:
+        enable-cache: true
+        cache-dependency-glob: "uv.lock"
 
-    - name: Create virtual environment
-      run: uv venv
+    - name: Set up Python
+      run: uv python install 3.9
 
-    - name: Install dependencies
-      run: |
-        source .venv/bin/activate
-        uv pip install -e .
+    - name: Sync dependencies
+      run: uv sync
 
     - name: Generate and Store Timestamp
       id: timestamp
@@ -44,11 +40,11 @@ jobs:
 
     - name: Retrain Model
       run: |
-        python Github_Labs/Lab2/src/train_model.py --timestamp "$timestamp"
+        uv run python Github_Labs/Lab2/src/train_model.py --timestamp "$timestamp"
 
     - name: Evaluate Model and Log Metrics
       run: |
-        python Github_Labs/Lab2/src/evaluate_model.py --timestamp "$timestamp"
+        uv run python Github_Labs/Lab2/src/evaluate_model.py --timestamp "$timestamp"
         metrics_filename="${timestamp}_metrics.json"
         mkdir -p Github_Labs/Lab2/metrics
         mv "$metrics_filename" "Github_Labs/Lab2/metrics/$metrics_filename"

@@ -16,31 +16,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.9
-
     - name: Install uv
-      run: pip install uv
+      uses: astral-sh/setup-uv@v1
+      with:
+        enable-cache: true
+        cache-dependency-glob: "uv.lock"
 
-    - name: Create virtual environment
-      run: uv venv
+    - name: Set up Python
+      run: uv python install 3.9
 
-    - name: Install dependencies using uv
-      run: |
-        source .venv/bin/activate
-        uv pip install -e .
+    - name: Sync dependencies
+      run: uv sync
 
     - name: Install pytest
       run: uv pip install pytest
 
     - name: Run pytest
-      run: |
-        cd Github_Labs/Lab2
-        pytest test/ -v --tb=short
-
-    - name: Generate test report
-      if: always()
-      run: |
-        echo "Test run completed at $(date)" > test_report.txt
+      run: uv run pytest
