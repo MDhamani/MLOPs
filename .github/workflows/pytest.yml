@@ -24,8 +24,13 @@ jobs:
     - name: Install uv
       run: pip install uv
 
+    - name: Create virtual environment
+      run: uv venv
+
     - name: Install dependencies using uv
-      run: uv pip install -r Github_Labs/Lab2/requirements.txt
+      run: |
+        source .venv/bin/activate
+        uv pip install -e .
 
     - name: Install pytest
       run: uv pip install pytest
