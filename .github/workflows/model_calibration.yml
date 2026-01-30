@@ -25,47 +25,54 @@ jobs:
       run: uv sync
 
     - name: Generate and Store Timestamp
+      id: timestamp
       run: |
         timestamp=$(date '+%Y%m%d%H%M%S')
         echo "$timestamp" > timestamp.txt
-      id: timestamp 
+        echo "timestamp=$timestamp" >> $GITHUB_ENV
 
     - name: Check File Permissions
-      run: |
-        ls -l ./src/train_model.py
+      run: ls -l Github_Labs/Lab2/src/train_model.py
 
     - name: Set File Permissions
-      run: |
-        chmod +x ./src/train_model.py
+      run: chmod +x Github_Labs/Lab2/src/train_model.py
 
     - name: Retrain Model
       run: |
-        timestamp=$(cat timestamp.txt) # Use the timestamp in your training script
-        python ./src/train_model.py --timestamp "$timestamp"
+        cd Github_Labs/Lab2
+        uv run python src/train_model.py --timestamp "$timestamp"
 
     - name: Evaluate Model and Log Metrics
       run: |
-        timestamp=$(cat timestamp.txt) # Use the timestamp in your training script
-        python ./src/evaluate_model.py  --timestamp "$timestamp" # Assuming you have a script for model evaluation
-        metrics_filename="${timestamp}_metrics.json"
-        mv $metrics_filename $GITHUB_WORKSPACE/metrics/$metrics_filename
-      continue-on-error: false  # Continue even if evaluation fails
+        cd Github_Labs/Lab2
+        uv run python src/evaluate_model.py --timestamp "$timestamp"
 
     - name: Store and Version the New Model
       run: |
-        timestamp=$(cat timestamp.txt)
-        model_filename="model_${timestamp}_dt_model.joblib"
-        mv $model_filename $GITHUB_WORKSPACE/models/$model_filename
+        model_filename="model_${timestamp}_xgb_model.joblib"
+        mkdir -p Github_Labs/Lab2/models
+        if [ -f "Github_Labs/Lab2/$model_filename" ]; then
+          mv "Github_Labs/Lab2/$model_filename" "Github_Labs/Lab2/models/$model_filename"
+        fi
 
     - name: Commit and Push Changes
       run: |
         git config --global user.email "35000278+MDhamani@users.noreply.github.com"
         git config --global user.name "MDhamani"
-        git add $GITHUB_WORKSPACE/metrics/$metrics_filename $GITHUB_WORKSPACE/models/$model_filename
-        git commit -m "Add metrics and updated model"
-        git push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        metrics_filename="Github_Labs/Lab2/metrics/${timestamp}_metrics.json"
+        model_filename="Github_Labs/Lab2/models/model_${timestamp}_xgb_model.joblib"
+        if [ -f "$metrics_filename" ] || [ -f "$model_filename" ]; then
+          git add -f "$metrics_filename" "$model_filename" 2>/dev/null || true
+          # Commit only if there are changes
+          if ! git diff --cached --quiet; then
+            git commit -m "Add metrics and updated model for $timestamp"
+            git push
+          else
+            echo "No changes to commit."
+          fi
+        else
+          echo "No files to commit."
+        fi
 
 
 
