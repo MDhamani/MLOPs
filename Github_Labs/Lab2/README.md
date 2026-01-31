@@ -1,5 +1,13 @@
 # Using GitHub Actions for Model Training and Versioning
 
+## Changes Made by Manav Dhamani
+
+- Added a new workflow called pytest.yml which runs test cases
+- Changed the model from Random Forest Classifier to XGBoost
+- Changed dataset to Breast Cancer Detection
+- Added some test cases for new dataset
+- Changed pip to uv
+
 This repository demonstrates how to use GitHub Actions to automate the process of training a machine learning model, storing the model, and versioning it. This allows you to easily update and improve your model in a collaborative environment.
 
 Watch the tutorial video for this lab at [Github action Lab2](https://youtu.be/cj5sXIMZUjQ)
