@@ -68,7 +68,7 @@ jobs:
           # Commit only if there are changes
           if ! git diff --cached --quiet; then
             git commit -m "Add metrics and updated model for $timestamp"
-            git push origin HEAD:main
+            git push https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
           else
             echo "No changes to commit."
           fi
