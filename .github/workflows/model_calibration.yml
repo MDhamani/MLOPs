@@ -62,6 +62,7 @@ jobs:
       run: |
         git config --global user.email "35000278+MDhamani@users.noreply.github.com"
         git config --global user.name "MDhamani"
+        git pull --ff-only
         metrics_filename="Github_Labs/Lab2/metrics/${timestamp}_metrics.json"
         model_filename="Github_Labs/Lab2/models/model_${timestamp}_xgb_model.joblib"
         if [ -f "$metrics_filename" ] || [ -f "$model_filename" ]; then
