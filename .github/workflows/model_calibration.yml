@@ -3,6 +3,7 @@ name: Periodic Model Calibration
 on: 
   schedule:
     - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
   retrain:
@@ -68,7 +69,7 @@ jobs:
           # Commit only if there are changes
           if ! git diff --cached --quiet; then
             git commit -m "Add metrics and updated model for $timestamp"
-            git push https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+            git push
           else
             echo "No changes to commit."
           fi
