@@ -1,84 +1,84 @@
-name: Periodic Model Calibration
+# name: Periodic Model Calibration
 
-on: 
-  schedule:
-    - cron: '0 0 * * *'
-  workflow_dispatch:
+# on: 
+#   schedule:
+#     - cron: '0 0 * * *'
+#   workflow_dispatch:
 
-jobs:
-  retrain:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
+# jobs:
+#   retrain:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: write
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v2
 
-    - name: Install uv
-      uses: astral-sh/setup-uv@v1
-      with:
-        enable-cache: true
-        cache-dependency-glob: "uv.lock"
+#     - name: Install uv
+#       uses: astral-sh/setup-uv@v1
+#       with:
+#         enable-cache: true
+#         cache-dependency-glob: "uv.lock"
 
-    - name: Set up Python
-      run: uv python install 3.9
+#     - name: Set up Python
+#       run: uv python install 3.9
 
-    - name: Sync dependencies
-      run: uv sync
+#     - name: Sync dependencies
+#       run: uv sync
 
-    - name: Generate and Store Timestamp
-      id: timestamp
-      run: |
-        timestamp=$(date '+%Y%m%d%H%M%S')
-        echo "$timestamp" > timestamp.txt
-        echo "timestamp=$timestamp" >> $GITHUB_ENV
+#     - name: Generate and Store Timestamp
+#       id: timestamp
+#       run: |
+#         timestamp=$(date '+%Y%m%d%H%M%S')
+#         echo "$timestamp" > timestamp.txt
+#         echo "timestamp=$timestamp" >> $GITHUB_ENV
 
-    - name: Check File Permissions
-      run: ls -l Github_Labs/Lab2/src/train_model.py
+#     - name: Check File Permissions
+#       run: ls -l Github_Labs/Lab2/src/train_model.py
 
-    - name: Set File Permissions
-      run: chmod +x Github_Labs/Lab2/src/train_model.py
+#     - name: Set File Permissions
+#       run: chmod +x Github_Labs/Lab2/src/train_model.py
 
-    - name: Retrain Model
-      run: |
-        cd Github_Labs/Lab2
-        uv run python src/train_model.py --timestamp "$timestamp"
+#     - name: Retrain Model
+#       run: |
+#         cd Github_Labs/Lab2
+#         uv run python src/train_model.py --timestamp "$timestamp"
 
-    - name: Evaluate Model and Log Metrics
-      run: |
-        cd Github_Labs/Lab2
-        uv run python src/evaluate_model.py --timestamp "$timestamp"
+#     - name: Evaluate Model and Log Metrics
+#       run: |
+#         cd Github_Labs/Lab2
+#         uv run python src/evaluate_model.py --timestamp "$timestamp"
 
-    - name: Store and Version the New Model
-      run: |
-        model_filename="model_${timestamp}_xgb_model.joblib"
-        mkdir -p Github_Labs/Lab2/models
-        if [ -f "Github_Labs/Lab2/$model_filename" ]; then
-          mv "Github_Labs/Lab2/$model_filename" "Github_Labs/Lab2/models/$model_filename"
-        fi
+#     - name: Store and Version the New Model
+#       run: |
+#         model_filename="model_${timestamp}_xgb_model.joblib"
+#         mkdir -p Github_Labs/Lab2/models
+#         if [ -f "Github_Labs/Lab2/$model_filename" ]; then
+#           mv "Github_Labs/Lab2/$model_filename" "Github_Labs/Lab2/models/$model_filename"
+#         fi
 
-    - name: Commit and Push Changes
-      run: |
-        git config --global user.email "35000278+MDhamani@users.noreply.github.com"
-        git config --global user.name "MDhamani"
-        git pull --ff-only
-        metrics_filename="Github_Labs/Lab2/metrics/${timestamp}_metrics.json"
-        model_filename="Github_Labs/Lab2/models/model_${timestamp}_xgb_model.joblib"
-        if [ -f "$metrics_filename" ] || [ -f "$model_filename" ]; then
-          git add -f "$metrics_filename" "$model_filename" 2>/dev/null || true
-          # Commit only if there are changes
-          if ! git diff --cached --quiet; then
-            git commit -m "Add metrics and updated model for $timestamp"
-            git push
-          else
-            echo "No changes to commit."
-          fi
-        else
-          echo "No files to commit."
-        fi
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#     - name: Commit and Push Changes
+#       run: |
+#         git config --global user.email "35000278+MDhamani@users.noreply.github.com"
+#         git config --global user.name "MDhamani"
+#         git pull --ff-only
+#         metrics_filename="Github_Labs/Lab2/metrics/${timestamp}_metrics.json"
+#         model_filename="Github_Labs/Lab2/models/model_${timestamp}_xgb_model.joblib"
+#         if [ -f "$metrics_filename" ] || [ -f "$model_filename" ]; then
+#           git add -f "$metrics_filename" "$model_filename" 2>/dev/null || true
+#           # Commit only if there are changes
+#           if ! git diff --cached --quiet; then
+#             git commit -m "Add metrics and updated model for $timestamp"
+#             git push
+#           else
+#             echo "No changes to commit."
+#           fi
+#         else
+#           echo "No files to commit."
+#         fi
+#       env:
+#         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
 
