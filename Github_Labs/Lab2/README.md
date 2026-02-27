@@ -1,5 +1,13 @@
 # Using GitHub Actions for Model Training and Versioning
 
+## Changes Made for FastAPI Lab
+
+- Switched dataset to Wine
+- Replaced Decision Tree with XGBoost
+- Added logging across training and API
+- Added `/features`, `/model-info`, `/classes`, `/version`, and batch prediction endpoints
+- Updated requirements and docs
+
 ## Changes Made for Github Lab 2
 
 - Added a new workflow called pytest.yml which runs test cases
