@@ -1,0 +1,13 @@
+[project]
+name = "apache-beam-lab"
+version = "0.1.0"
+description = "Data lab for Apache Beam pipelines"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "apache-beam>=2.56.0",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"

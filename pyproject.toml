@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "apache-beam>=2.66.0",
     "cachetools==5.5.0",
     "certifi==2024.8.30",
     "charset-normalizer==3.3.2",
